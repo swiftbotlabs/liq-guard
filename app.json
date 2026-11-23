@@ -9,12 +9,16 @@
     {
       "name": "network",
       "desc": "Reads your position, liquidation distance and alerts from the Liq Guard server, which talks to the Binance futures testnet.",
-      "whitelist": ["https://liq-guard.example.workers.dev"]
+      "whitelist": [
+        "https://liq-guard.swiftbotlab.workers.dev"
+      ]
     },
     {
       "name": "g2-microphone",
       "desc": "Hold to speak a quick action like 'reduce half'. Audio is sent once for transcription and never stored."
     }
   ],
-  "supported_languages": ["en"]
+  "supported_languages": [
+    "en"
+  ]
 }
