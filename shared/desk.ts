@@ -28,6 +28,8 @@ export interface VenuePosition { symbol: string; side: Side; qty: number; entry:
 export interface Venue {
   mode: Mode;
   label: string;
+  /** Where the last marks came from (SIM only): live testnet, testnet via relay, or labelled simulated prices. */
+  priceSource?: () => 'testnet' | 'relay' | 'simulated';
   /** Mark prices for the symbols. Must throw on any failure (fail closed). */
   marks(symbols: string[]): Promise<Record<string, number>>;
   positions(d: DeskData, marks: Record<string, number>): Promise<VenuePosition[]>;
@@ -262,7 +264,7 @@ export class Desk {
     return {
       mode: this.venue.mode, label, shockPct: this.venue.mode === 'SIM' ? shockAt(this.d, this.now()) : 0,
       positions: views, alerts, fired: alerts.filter((a) => !a.armed && a.firedAt), suggestions, wallet,
-      stale: false, updatedAt: this.now(),
+      stale: false, updatedAt: this.now(), priceSource: this.venue.priceSource?.(),
     };
   }
 

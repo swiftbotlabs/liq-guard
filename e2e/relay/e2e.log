@@ -1,0 +1,29 @@
+PASS health {"status": 200, "body": {"ok": true, "mode": "SIM"}}
+PASS session {"status": 200}
+PASS state: SIM BTC long marked to live testnet price {"mark": 62811.69746377, "liq": 56284.5, "liqDist": 0.1039}
+PASS propose reduce ETH {"title": "Reduce ETH SHORT by 50%?", "lines": ["buy 1.5 ETH at ~1,772.95 (reduce only)", "realize -$27 \u00b7 loss at liq -$1,053 -> -$527"]}
+PASS confirm executes once; same key replays the same result {"ref": "SIM-0001", "summary": "BOUGHT 1.5 ETH @ 1,772.95"}
+PASS used token with a new key is refused {"status": 409, "body": {"error": "bad_token", "message": "unknown or used confirm token"}}
+PASS ETH reduced exactly once (3 -> 1.5) {"qty": 1.5}
+PASS no session -> 401 {"status": 401}
+PASS bad JSON -> 400 {"status": 400}
+PASS oversized JSON -> 413 {"status": 413}
+PASS reduce fraction 2 -> refused (reduce only) {"status": 400}
+PASS open/increase action -> refused {"status": 400}
+PASS margin above per-action cap -> 403 {"status": 403}
+PASS symbol not on allowlist -> 400 {"status": 400}
+PASS shock beyond 20% -> 400 {"status": 400}
+PASS asr on junk audio -> 503 (local, no AI) or 400 bad_audio (deployed) {"status": 503, "error": "asr_unavailable"}
+PASS asr body over 10 s -> 413 or 503 {"status": 413}
+PASS unknown confirm token -> 409 {"status": 409}
+PASS UI glance shows SIM label and BTC LONG {"screen": "glance"}
+PASS voice text "alert at N" sets a price alert (no confirm needed, no money) {"level": 61600}
+PASS SIM shock -7% (labelled demo control) {"status": 200}
+PASS alert screen pops for liquidation danger {"alert": "BTC liquidation under 5% away"}
+PASS glance in danger: boxed liq line, add-margin default {"pick": "> add 740 margin"}
+PASS voice "reduce half" -> confirm card, nothing executed yet {"title": "Reduce BTC LONG by 50%?"}
+PASS position unchanged while the card is open {"qty": 0.2}
+PASS one press -> reduced by half {"before": 0.2, "after": 0.1, "result": "SOLD 0.1 BTC @ 58,413"}
+PASS swipe on confirm = NO: position untouched {}
+PASS danger default "add margin": liq distance grows to ~10% {"suggestion": "> add 380 margin", "before": 0.0362, "after": 0.1016}
+STEPS 28 FAILED 0 []

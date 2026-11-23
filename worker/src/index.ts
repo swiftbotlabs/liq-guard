@@ -5,7 +5,8 @@ import { DurableObject } from 'cloudflare:workers';
 import { DEFAULT_CAPS, Desk, DeskError, SYMBOLS, emptyDesk, randomToken, simVenue, type Caps, type DeskData, type Venue } from '../../shared/desk';
 import { parseIntent, type Intent } from '../../shared/intents';
 import type { ActionSpec } from '../../shared/types';
-import { cachedMarks, liveVenue } from './binance';
+import { cachedFrom, liveVenue } from './binance';
+import { priceChain } from './prices';
 import { checkWav, pcmToWav, MAX_AUDIO_BYTES } from './audio';
 
 export interface Env {
@@ -13,6 +14,9 @@ export interface Env {
   LIMITER: DurableObjectNamespace<Limiter>;
   AI?: Ai;
   MODE?: string; // "SIM" (default) | "LIVE"
+  PRICE_RELAY_URL?: string; // SIM: origin of the price relay (relay/), tried before the testnet itself
+  PRICE_RELAY_TOKEN?: string; // secret
+  PRICE_DIRECT?: string; // "0" = skip the direct testnet route (tests)
   DEMO_CONTROLS?: string; // "1" enables /api/sim/* (SIM only)
   BINANCE_TESTNET_KEY?: string; // secret, LIVE only
   BINANCE_TESTNET_SECRET?: string; // secret, LIVE only
@@ -174,7 +178,8 @@ export class DeskDO extends DurableObject<Env> {
       }
       return liveVenue(f, { key: this.env.BINANCE_TESTNET_KEY, secret: this.env.BINANCE_TESTNET_SECRET });
     }
-    return simVenue(cachedMarks(f));
+    const chain = priceChain({ fetch: f, relayUrl: this.env.PRICE_RELAY_URL, relayToken: this.env.PRICE_RELAY_TOKEN, directOff: this.env.PRICE_DIRECT === '0' });
+    return { ...simVenue(cachedFrom(chain.marks)), priceSource: chain.source };
   }
 
   private limited(kind: string): boolean {

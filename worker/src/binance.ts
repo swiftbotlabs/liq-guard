@@ -43,20 +43,22 @@ export async function fetchMarks(f: Fetch, symbols: string[]): Promise<Record<st
   return out;
 }
 
-/** Small time-based cache so a 2 s poll from the glasses doesn't hammer the testnet. */
-export function cachedMarks(f: Fetch, ttlMs = 1_000): (symbols: string[]) => Promise<Record<string, number>> {
+/** Small time-based cache so a 2 s poll from the glasses doesn't hammer the price source. */
+export function cachedFrom(get: (symbols: string[]) => Promise<Record<string, number>>, ttlMs = 1_000): (symbols: string[]) => Promise<Record<string, number>> {
   let at = 0;
   let key = '';
   let val: Record<string, number> = {};
   return async (symbols) => {
     const k = [...symbols].sort().join(',');
     if (k === key && Date.now() - at < ttlMs) return val;
-    val = await fetchMarks(f, symbols);
+    val = await get(symbols);
     key = k;
     at = Date.now();
     return val;
   };
 }
+
+export const cachedMarks = (f: Fetch, ttlMs = 1_000) => cachedFrom((s) => fetchMarks(f, s), ttlMs);
 
 async function hmacHex(secret: string, msg: string): Promise<string> {
   const key = await crypto.subtle.importKey('raw', new TextEncoder().encode(secret), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);

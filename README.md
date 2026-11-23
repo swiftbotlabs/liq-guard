@@ -37,6 +37,8 @@ For an **isolated** position, Binance releases margin in proportion when you red
 | Actions | update the simulated position and wallet | real **testnet** orders: `MARKET` + `reduceOnly`, `positionMargin` |
 | Label on the glasses | `SIM` in every header, `SIMULATED` on confirm/done | `BINANCE TESTNET` |
 
+Where SIM prices come from, in order: (1) the price relay in `relay/` (a 50-line, token-gated, read-only forwarder for the public `premiumIndex` endpoint; the testnet refuses Cloudflare Worker egress, so the Worker asks the relay), (2) the testnet directly, (3) if both fail, simulated prices anchored at the last real mark, and the header then reads `SIM sim px`. A failed route is retried every 30 s, so the glasses never wait on a dead route. `/api/state` reports `priceSource` (`relay`, `testnet` or `simulated`).
+
 SIM has one demo control: a labelled price shock (`POST /api/sim/shock`) that moves your session's simulated mark, so a demo doesn't have to wait for the market. While it is active, the header shows `SIM shock -7.0%`. Switching to LIVE is configuration only (`MODE = "LIVE"` plus three Worker secrets).
 
 Liquidation formula (USDT-M, isolated, one-way):
@@ -49,7 +51,7 @@ Liquidation formula (USDT-M, isolated, one-way):
 - **Reduce-only.** The app can only reduce, close or add margin. It can never open or increase a position, and orders carry `reduceOnly=true`.
 - **Caps** (Worker vars): max order notional (25,000 USDT), max margin per action (1,000) and per day (3,000), and max actions per day.
 - **Confirm token.** It is single use, bound to exactly one action, and expires after 30 s. The confirm call needs an **Idempotency-Key**, so a retried request replays the stored result instead of trading twice. A concurrent duplicate is refused.
-- **Fails closed.** With no fresh price, actions are refused and the glasses show `NO LIVE PRICES · actions locked`. LIVE mode without a key never falls back to SIM, and LIVE sessions need a pairing code.
+- **Fails closed.** In LIVE mode, with no fresh price, actions are refused and the glasses show `NO LIVE PRICES · actions locked`. LIVE mode without a key never falls back to SIM, and LIVE sessions need a pairing code. In SIM nothing real can move, so when no real price route answers, the simulated position keeps running on simulated prices and the header says so (`SIM sim px`).
 - **Input limits.** Bodies are capped before parsing (JSON 4 KB, audio 10 s). Audio is checked by its bytes (16 kHz mono PCM16). There are rate limits per session and per network.
 - **Privacy.** Audio stays in memory, is sent once for transcription and is **never stored or logged**. The server keeps only the session's desk state (simulated positions, alerts, recent action results).
 

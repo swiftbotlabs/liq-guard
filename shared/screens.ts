@@ -45,7 +45,7 @@ function clockOf(ts: number): string {
 export function modeTag(s: DeskState): string {
   if (s.mode !== 'SIM') return s.label;
   const sh = Math.abs(s.shockPct) >= 0.0005 ? ` shock ${s.shockPct > 0 ? '+' : ''}${(s.shockPct * 100).toFixed(1)}%` : '';
-  return `SIM${sh}`;
+  return `SIM${s.priceSource === 'simulated' ? ' sim px' : ''}${sh}`;
 }
 
 export interface GlanceOpts { focus?: string; pick: number; blinkOn: boolean }

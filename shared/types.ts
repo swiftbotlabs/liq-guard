@@ -76,5 +76,6 @@ export interface DeskState {
   wallet: number; // available USDT (SIM) or availableBalance (LIVE)
   stale: boolean;
   updatedAt: number;
+  priceSource?: 'testnet' | 'relay' | 'simulated'; // SIM: "simulated" = every real price route failed; shown on screen
   error?: string;
 }

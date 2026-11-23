@@ -8,6 +8,7 @@
     "dev": "vite --host 127.0.0.1 --port 18573",
     "build": "tsc --noEmit -p tsconfig.json && vite build",
     "test": "vitest run",
+    "test:relay": "node --test relay/relay.test.mjs",
     "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p worker/tsconfig.json",
     "worker:dev": "wrangler dev --config worker/wrangler.local.toml --port 18787 --ip 127.0.0.1 --inspector-port 18229",
     "e2e": "python3 -u e2e/run_e2e.py http://127.0.0.1:18787 http://127.0.0.1:18573",

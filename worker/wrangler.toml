@@ -10,8 +10,11 @@ DEMO_CONTROLS = "1"     # SIM-only labelled price-shock control for demos; set "
 MAX_ORDER_NOTIONAL = "25000"
 MAX_MARGIN_ADD = "1000"
 MAX_MARGIN_DAY = "3000"
+# SIM price route: relay first (the testnet refuses Cloudflare egress), then the testnet directly, then labelled simulated prices.
+PRICE_RELAY_URL = "https://liq-guard-prices.onrender.com"
 
 # Secrets (never in this file):
+#   wrangler secret put PRICE_RELAY_TOKEN       (SIM: the relay's RELAY_TOKEN)
 #   wrangler secret put BINANCE_TESTNET_KEY     (LIVE only)
 #   wrangler secret put BINANCE_TESTNET_SECRET  (LIVE only)
 #   wrangler secret put LIVE_PAIR_CODE          (LIVE only: code the phone enters once)
