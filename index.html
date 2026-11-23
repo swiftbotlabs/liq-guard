@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Liq Guard</title>
+<style>
+  :root { color-scheme: dark; --bg:#0b0f0c; --fg:#e8f5ea; --dim:#8fa894; --acc:#45ff6a; }
+  body { margin:0; background:var(--bg); color:var(--fg); font:16px/1.5 system-ui, sans-serif; padding:20px 16px; }
+  h1 { font-size:20px; margin:0 0 4px; } .acc { color:var(--acc); } .dim { color:var(--dim); font-size:14px; }
+  .card { border:1px solid #1f2a22; border-radius:12px; padding:14px; margin:14px 0; }
+  input { width:100%; box-sizing:border-box; background:#111813; color:var(--fg); border:1px solid #2b3a2f; border-radius:8px; padding:10px; font-size:16px; }
+</style>
+</head>
+<body>
+  <h1>Liq Guard <span class="acc">on G2</span></h1>
+  <div class="dim" id="mode">connecting...</div>
+  <div class="card"><div id="status">Looking for the glasses...</div></div>
+  <div class="card">
+    <form id="cmd"><label class="dim" for="cmdText">Type instead of speaking (the confirm card still appears on the glasses)</label>
+    <input id="cmdText" maxlength="200" placeholder="reduce half · add 200 margin · alert at 60k" autocomplete="off" /></form>
+  </div>
+  <div class="card dim">
+    Glasses: press = do the highlighted action · swipe = next action · hold = speak · double-press = exit.<br />
+    Every order shows a confirm card first: press = YES, swipe = NO. Testnet or simulation only, never real funds.<br />
+    Privacy: voice is sent once for transcription and never stored. No exchange keys live in this app.
+  </div>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>

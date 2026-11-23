@@ -1,0 +1,171 @@
+{
+ "at": "2026-11-23T15:25:19Z",
+ "worker": "http://127.0.0.1:18787",
+ "steps": [
+  {
+   "step": "health",
+   "ok": true,
+   "status": 200,
+   "body": {
+    "ok": true,
+    "mode": "SIM"
+   }
+  },
+  {
+   "step": "session",
+   "ok": true,
+   "status": 200
+  },
+  {
+   "step": "state: SIM BTC long marked to live testnet price",
+   "ok": true,
+   "mark": 63420.3,
+   "liq": 56829.9,
+   "liqDist": 0.1039
+  },
+  {
+   "step": "propose reduce ETH",
+   "ok": true,
+   "title": "Reduce ETH SHORT by 50%?",
+   "lines": [
+    "buy 1.5 ETH at ~1,791.56 (reduce only)",
+    "realize -$27 \u00b7 loss at liq -$1,064 -> -$532"
+   ]
+  },
+  {
+   "step": "confirm executes once; same key replays the same result",
+   "ok": true,
+   "ref": "SIM-0001",
+   "summary": "BOUGHT 1.5 ETH @ 1,791.56"
+  },
+  {
+   "step": "used token with a new key is refused",
+   "ok": true,
+   "status": 409,
+   "body": {
+    "error": "bad_token",
+    "message": "unknown or used confirm token"
+   }
+  },
+  {
+   "step": "ETH reduced exactly once (3 -> 1.5)",
+   "ok": true,
+   "qty": 1.5
+  },
+  {
+   "step": "no session -> 401",
+   "ok": true,
+   "status": 401
+  },
+  {
+   "step": "bad JSON -> 400",
+   "ok": true,
+   "status": 400
+  },
+  {
+   "step": "oversized JSON -> 413",
+   "ok": true,
+   "status": 413
+  },
+  {
+   "step": "reduce fraction 2 -> refused (reduce only)",
+   "ok": true,
+   "status": 400
+  },
+  {
+   "step": "open/increase action -> refused",
+   "ok": true,
+   "status": 400
+  },
+  {
+   "step": "margin above per-action cap -> 403",
+   "ok": true,
+   "status": 403
+  },
+  {
+   "step": "symbol not on allowlist -> 400",
+   "ok": true,
+   "status": 400
+  },
+  {
+   "step": "shock beyond 20% -> 400",
+   "ok": true,
+   "status": 400
+  },
+  {
+   "step": "asr on junk audio -> 503 (local, no AI) or 400 bad_audio (deployed)",
+   "ok": true,
+   "status": 503,
+   "error": "asr_unavailable"
+  },
+  {
+   "step": "asr body over 10 s -> 413 or 503",
+   "ok": true,
+   "status": 413
+  },
+  {
+   "step": "unknown confirm token -> 409",
+   "ok": true,
+   "status": 409
+  },
+  {
+   "step": "LIVE mode without pairing code -> 403",
+   "ok": true,
+   "status": 403
+  },
+  {
+   "step": "UI glance shows SIM label and BTC LONG",
+   "ok": true,
+   "screen": "glance"
+  },
+  {
+   "step": "voice text \"alert at N\" sets a price alert (no confirm needed, no money)",
+   "ok": true,
+   "level": 62200
+  },
+  {
+   "step": "SIM shock -7% (labelled demo control)",
+   "ok": true,
+   "status": 200
+  },
+  {
+   "step": "alert screen pops for liquidation danger",
+   "ok": true,
+   "alert": "BTC liquidation under 5% away"
+  },
+  {
+   "step": "glance in danger: boxed liq line, add-margin default",
+   "ok": true,
+   "pick": "> add 750 margin"
+  },
+  {
+   "step": "voice \"reduce half\" -> confirm card, nothing executed yet",
+   "ok": true,
+   "title": "Reduce BTC LONG by 50%?"
+  },
+  {
+   "step": "position unchanged while the card is open",
+   "ok": true,
+   "qty": 0.2
+  },
+  {
+   "step": "one press -> reduced by half",
+   "ok": true,
+   "before": 0.2,
+   "after": 0.1,
+   "result": "SOLD 0.1 BTC @ 58,981"
+  },
+  {
+   "step": "swipe on confirm = NO: position untouched",
+   "ok": true
+  },
+  {
+   "step": "danger default \"add margin\": liq distance grows to ~10%",
+   "ok": true,
+   "suggestion": "> add 380 margin",
+   "before": 0.0365,
+   "after": 0.1012
+  }
+ ],
+ "failed": []
+}

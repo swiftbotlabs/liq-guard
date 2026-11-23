@@ -1,0 +1,20 @@
+{
+  "package_id": "com.swiftbotlabs.liqguard",
+  "edition": "202601",
+  "name": "Liq Guard",
+  "version": "0.1.0",
+  "min_sdk_version": "0.0.16",
+  "entrypoint": "index.html",
+  "permissions": [
+    {
+      "name": "network",
+      "desc": "Reads your position, liquidation distance and alerts from the Liq Guard server, which talks to the Binance futures testnet.",
+      "whitelist": ["https://liq-guard.example.workers.dev"]
+    },
+    {
+      "name": "g2-microphone",
+      "desc": "Hold to speak a quick action like 'reduce half'. Audio is sent once for transcription and never stored."
+    }
+  ],
+  "supported_languages": ["en"]
+}

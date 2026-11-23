@@ -1,0 +1,33 @@
+# LOCAL TEST CONFIG (no Workers AI binding: /api/asr answers 503 locally; /api/intent covers the same path). Generated from wrangler.toml.
+name = "liq-guard"
+main = "src/index.ts"
+compatibility_date = "2025-11-01"
+workers_dev = true
+
+[vars]
+MODE = "SIM"            # "SIM" | "LIVE"
+DEMO_CONTROLS = "1"     # SIM-only labelled price-shock control for demos; set "0" to disable
+MAX_ORDER_NOTIONAL = "25000"
+MAX_MARGIN_ADD = "1000"
+MAX_MARGIN_DAY = "3000"
+
+# Secrets (never in this file):
+#   wrangler secret put BINANCE_TESTNET_KEY     (LIVE only)
+#   wrangler secret put BINANCE_TESTNET_SECRET  (LIVE only)
+#   wrangler secret put LIVE_PAIR_CODE          (LIVE only: code the phone enters once)
+
+
+[[durable_objects.bindings]]
+name = "DESK"
+class_name = "DeskDO"
+
+[[durable_objects.bindings]]
+name = "LIMITER"
+class_name = "Limiter"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["DeskDO", "Limiter"]
+
+[observability]
+enabled = false

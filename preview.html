@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Liq Guard preview</title>
+<style>
+  html, body { margin:0; background:#000; }
+  #g2 { position:absolute; left:0; top:0; }
+  #panel { position:absolute; left:0; top:300px; color:#8fa894; font:13px/1.4 system-ui, sans-serif; padding:0 8px; width:560px; }
+  #panel input { background:#111; color:#ddd; border:1px solid #333; padding:4px; width:300px; }
+</style>
+</head>
+<body>
+  <div id="g2"></div>
+  <div id="panel">
+    Preview of the 576x288 glasses canvas (same container specs as the SDK). Keys: Enter = press, Up/Down = swipe,
+    Backspace = double-press. <form id="say"><input id="sayText" placeholder="type what you would say" /></form>
+  </div>
+  <script type="module" src="/src/preview.ts"></script>
+</body>
+</html>
