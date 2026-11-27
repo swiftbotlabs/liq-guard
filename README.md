@@ -12,6 +12,8 @@ Track: **03 · Exchanges & Stocks** (Binance USDT-M futures). Money safety: **si
 
 These are real frames of the 576 x 288 glasses canvas from the end-to-end test, drawn by our preview harness from the same container specs the SDK receives.
 
+**Try it in a minute:** https://apps.swiftbotlab.workers.dev/liq-guard-demo/ is a replay of a recorded Even Hub simulator run (real glasses frames, the Worker's state, the add-margin confirm flow; play, pause, jump to a phase). The same files are in `demo/`. Demo film: https://youtu.be/c8yJK8XyEfQ
+
 ## What it does
 
 - **Read at a glance.** Your worst position comes first: side, leverage, PnL, ROE and **LIQ 3.6% AWAY**. Below that: mark, liquidation and entry price, plus any armed alert. When the distance drops under 5%, the line gets a border and blinks.
@@ -29,6 +31,8 @@ For an **isolated** position, Binance releases margin in proportion when you red
 
 ## SIM and LIVE (please read)
 
+**Why the demo is a simulation.** We could not get a live exchange testnet key from our network: creating a Binance futures testnet key needs a binance.com login, and binance.com is blocked by our ISP, Bybit's testnet refuses to issue keys to us (error 10024), and OKX does not answer from here. So the demo runs SIM: a clearly labelled simulated position marked to live Binance futures testnet prices. The LIVE order path is the same desk code (`worker/src/binance.ts`): `MARKET` + `reduceOnly=true` and `positionMargin`, HMAC-signed, and every request URL is checked against the hard-coded `https://testnet.binancefuture.com` before it is sent. It has not placed an order yet, and we don't claim it has.
+
 | | SIM (default) | LIVE-TESTNET |
 |---|---|---|
 | Position | **simulated** isolated positions (BTC long 8x, ETH short 5x), opened relative to the current price | your Binance **futures testnet** account (`/fapi/v2/positionRisk`) |
@@ -42,7 +46,7 @@ Where SIM prices come from, in order: (1) the price relay in `relay/` (a 50-line
 SIM has one demo control: a labelled price shock (`POST /api/sim/shock`) that moves your session's simulated mark, so a demo doesn't have to wait for the market. While it is active, the header shows `SIM shock -7.0%`. Switching to LIVE is configuration only (`MODE = "LIVE"` plus three Worker secrets).
 
 Liquidation formula (USDT-M, isolated, one-way):
-`LP = (WB + cum - side*Q*EP) / (Q*MMR - side*Q)`, with WB = position margin, Q = size, EP = entry, side = +1 long / -1 short, and MMR and cum from the notional's bracket. Unit tests check it against worked examples (`test/liq.test.ts`).
+`LP = (WB + cum - side*Q*EP) / (Q*MMR - side*Q)`, with WB = position margin, Q = size, EP = entry, side = +1 long / -1 short, and MMR and cum from the notional's bracket. Unit tests check it against worked examples and, independently, check Binance's defining identity (margin balance = maintenance margin at the liquidation price) on 1,000 seeded random positions across every bracket tier, both sides and both symbols, plus that the add-margin solver lands each one at exactly 10% away. One command: `npx vitest run test/liq.test.ts`. Planted control: dropping `cum` from the formula fails 3 tests.
 
 ## Safety and privacy
 
@@ -61,7 +65,8 @@ Needs Node 20+. The SIM mode needs no accounts and no keys.
 
 ```bash
 npm install
-npm test                      # 76 unit tests: liquidation math, intents, confirm flow, idempotency, screens, audio
+npm test                      # 90 unit tests: liquidation math (+1,000-case identity check), intents, confirm flow, idempotency, screens, audio
+npm run test:relay            # 9 price-relay tests
 npm run worker:dev            # local Worker on http://127.0.0.1:18787 (SIM, live testnet prices)
 npm run build && npm run preview   # in a 2nd terminal: http://127.0.0.1:18573
 ```
@@ -88,6 +93,10 @@ npx wrangler deploy --config worker/wrangler.toml --env live    # a separate Wor
 ```
 
 **End-to-end test** (Python + Playwright): `pip install playwright && playwright install chromium`, start the Worker and the preview, then run `npm run e2e`. It walks position → price move → alert → "reduce half" → confirm → reduced → add margin, plus the API idempotency and bad-input checks, and writes `e2e/out/log.json` and screenshots.
+
+## Voice regression
+
+`test/voice-regression/run.sh` synthesises every supported command (10 commands, 35 phrasings) and 5 negatives with Kokoro in 5 voices at 3 speeds (600 clips, 16 kHz mono PCM16, each passing the Worker's audio guard), runs them through Whisper and then the app's own `parseIntent`, and writes [VOICE-REGRESSION.md](test/voice-regression/VOICE-REGRESSION.md). Results: 116/120 (97%) pass with whisper large-v3-turbo (the model family the Worker runs, 3 voices at 1.0x), 543/600 (90%) with the smaller whisper base on all 600; 0 clips became a wrong money action, and every negative stayed `unknown`. A failed clip means the glasses ask again; nothing moves without the confirm card.
 
 ## How it works
 

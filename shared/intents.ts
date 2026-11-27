@@ -24,7 +24,7 @@ const SCALES: Record<string, number> = { hundred: 100, thousand: 1000, k: 1000, 
 
 const SYMBOLS: [RegExp, string][] = [
   [/\b(btc|bitcoin|bit coin)\b/, 'BTCUSDT'],
-  [/\b(eth|ether|ethereum)\b/, 'ETHUSDT'],
+  [/\b(eth|ether|ethereum|etherium|etherum|e t h)\b/, 'ETHUSDT'], // + common ASR spellings
 ];
 
 /** Normalise a transcript: lower case, digits glued to k/m, punctuation out, currency words out. */
@@ -157,9 +157,12 @@ export function parseIntent(raw: string): Intent {
   }
 
   // close: "close", "close it", "close all", "flatten", "close the btc position" (but not "close half")
-  const isReduceWord = /\b(reduce|cut|trim|close|sell|take off|derisk|de risk)\b/.test(s);
+  const isReduceWord = /\b(reduce|reduced|reducing|cut|cutting|trim|close|sell|take off|derisk|de risk)\b/.test(s);
   if (/\b(flatten|close (it|all|everything|the position|position|out)|exit (the )?position)\b/.test(s) || s === 'close' ||
       (/^close\b/.test(s) && !/\b(half|percent|third|quarter|\d)\b/.test(s) && !/\b(one|two|three|four|five|six|seven|eight|nine|ten|twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety)\b/.test(s))) {
+    // never guess which position: "close my dogecoin" (or an ASR-mangled symbol) is unknown, not "close the focused one"
+    const CLOSE_OK = /^(close|it|all|everything|the|my|position|positions|out|now|please|flatten|exit|btc|bitcoin|bit|coin|eth|ether|ethereum|etherium|etherum|e|t|h|long|short)$/;
+    if (words.some((w) => !CLOSE_OK.test(w))) return { type: 'unknown', text: s };
     return withSym({ type: 'close' } as Intent);
   }
   if (isReduceWord) {

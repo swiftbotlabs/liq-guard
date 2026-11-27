@@ -1,0 +1,16 @@
+{
+ "note": "Every voice command Liq Guard supports, 3-5 spoken paraphrases each, plus negatives that must stay 'unknown' (never move money). expect = the exact parseIntent() result.",
+ "commands": [
+  {"cmd": "reduce half", "expect": {"type": "reduce", "fraction": 0.5}, "say": ["Reduce half.", "Reduce by half.", "Cut it in half.", "Close half."]},
+  {"cmd": "reduce quarter", "expect": {"type": "reduce", "fraction": 0.25}, "say": ["Reduce twenty five percent.", "Trim a quarter.", "Reduce by a quarter.", "Cut twenty five percent."]},
+  {"cmd": "close", "expect": {"type": "close"}, "say": ["Close.", "Close it.", "Close the position.", "Flatten."]},
+  {"cmd": "close eth", "expect": {"type": "close", "symbol": "ETHUSDT"}, "say": ["Close the ETH position.", "Close ether.", "Close my ethereum."]},
+  {"cmd": "add 200 margin", "expect": {"type": "add_margin", "amount": 200}, "say": ["Add two hundred margin.", "Add two hundred to margin.", "Top up two hundred.", "Add 200 USDT margin."]},
+  {"cmd": "add 500 margin", "expect": {"type": "add_margin", "amount": 500}, "say": ["Add five hundred margin.", "Move five hundred dollars from spot to margin.", "Top up five hundred."]},
+  {"cmd": "alert at 60k", "expect": {"type": "alert", "price": 60000}, "say": ["Alert at sixty k.", "Alert me at sixty thousand.", "Set an alert at sixty thousand.", "Alert at 60k."]},
+  {"cmd": "btc alert at 59,500", "expect": {"type": "alert", "price": 59500, "symbol": "BTCUSDT"}, "say": ["Set an alert at fifty nine thousand five hundred on bitcoin.", "Bitcoin alert at fifty nine point five k.", "Alert me when bitcoin hits fifty nine thousand five hundred."]},
+  {"cmd": "show eth", "expect": {"type": "focus", "symbol": "ETHUSDT"}, "say": ["Show ETH.", "Show ether.", "Show ethereum."]},
+  {"cmd": "cancel", "expect": {"type": "cancel"}, "say": ["Cancel.", "Never mind.", "No."]}
+ ],
+ "negatives": ["What's the weather like?", "Call mom.", "How much is bitcoin?", "Turn up the volume.", "Add margin."]
+}

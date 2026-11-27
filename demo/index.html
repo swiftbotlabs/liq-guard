@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Liq Guard demo</title>
+<meta name="description" content="Replay of a recorded Liq Guard run in the Even Hub simulator: real 576x288 glasses frames, the price ladder and the add-margin confirm flow.">
+<link rel="stylesheet" href="style.css"><script src="run.js"></script></head>
+<body><main>
+<header><span class="brand">Liq Guard <i>for Even G2</i></span><span class="pill">SIM position · Binance futures testnet prices</span></header>
+<h1>See liquidation coming. Move it back with one press.</h1>
+<p class="lede">A replay of a recorded run in the Even Hub simulator 0.9.5 (26 Nov). The glasses images are the real 576×288 frames the app drew; the ladder is the Worker's live state from the same run. Nothing here calls an exchange.</p>
+<div class="grid">
+  <section>
+    <div class="glass"><img id="gimg" src="frames/000000.png" alt="Liq Guard glasses display"></div>
+    <div class="cap">real glasses frame · run time <span id="rt">0.0</span> s · input <span id="press" class="press">press</span></div>
+    <div class="ladder" aria-hidden="true">
+      <div class="track"></div><div class="zone" id="zone"></div><div class="liq" id="liq"></div><div class="entry" id="entry"></div><div class="mark" id="mark"></div>
+      <div class="lab b" id="liqL"></div><div class="lab dimc" id="entryL">entry 61,786</div>
+    </div>
+    <div class="controls">
+      <button id="play" aria-label="Play">▶ Play</button>
+      <input id="scrub" type="range" min="0" max="1000" value="0" aria-label="Replay position">
+      <span id="tc">0:00 / 0:57</span>
+      <button id="spd" aria-label="Speed">1.5×</button>
+    </div>
+    <div class="chap" id="chaps"></div>
+  </section>
+  <aside class="side" aria-live="polite">
+    <div class="row"><div class="k">phase</div><div class="v" id="ph">Glance</div><div class="s" id="phs"></div></div>
+    <div class="row"><div class="k">distance to liquidation</div><div class="v" id="dist">10.4%</div></div>
+    <div class="row"><div class="k">mark · liquidation</div><div class="v v20" id="ml"></div></div>
+    <div class="row"><div class="k">unrealized PnL (simulated)</div><div class="v v20" id="pnl"></div></div>
+  </aside>
+</div>
+<footer>Liq Guard · Even Realities "Heads Up" hackathon · Track 03 Exchanges &amp; Stocks · source: <a href="https://github.com/swiftbotlabs/liq-guard">github.com/swiftbotlabs/liq-guard</a> · testnet / simulation only, no mainnet code path.</footer>
+</main>
+<script src="app.js"></script></body></html>

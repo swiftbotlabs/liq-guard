@@ -25,6 +25,10 @@ describe('intents', () => {
     ['close it', { type: 'close' }],
     ['Close the ETH position', { type: 'close', symbol: 'ETHUSDT' }],
     ['flatten', { type: 'close' }],
+    ['close my position', { type: 'close' }],
+    ['Close my etherium.', { type: 'close', symbol: 'ETHUSDT' }],
+    ['reduced by a quarter', { type: 'reduce', fraction: 0.25 }],
+    ['Cutting in half.', { type: 'reduce', fraction: 0.5 }],
     ['Add 200 margin.', { type: 'add_margin', amount: 200 }],
     ['add two hundred to margin', { type: 'add_margin', amount: 200 }],
     ['Move $500 from spot to margin', { type: 'add_margin', amount: 500 }],
@@ -43,6 +47,8 @@ describe('intents', () => {
     expect(parseIntent('').type).toBe('unknown');
     expect(parseIntent('add margin').type).toBe('unknown'); // no amount: never guess money
     expect(parseIntent('alert').type).toBe('unknown');
+    expect(parseIntent('close my dogecoin').type).toBe('unknown'); // never guess which position to close
+    expect(parseIntent('close the window').type).toBe('unknown');
     const big = 'reduce half '.repeat(10_000);
     expect(normalise(big).length).toBeLessThanOrEqual(200);
     expect(parseIntent('<script>alert(1)</script>').type).not.toBe('add_margin');
