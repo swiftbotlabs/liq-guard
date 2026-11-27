@@ -96,6 +96,9 @@ export default {
   async fetch(req: Request, env: Env): Promise<Response> {
     const url = new URL(req.url);
     if (req.method === 'OPTIONS') return new Response(null, { status: 204, headers: CORS });
+    // The bare Worker URL is linked from the entry: answer it with a short pointer instead of a 404.
+    if (url.pathname === '/' && (req.method === 'GET' || req.method === 'HEAD'))
+      return json({ ok: true, service: 'Liq Guard Worker (SIM mode by default)', mode: modeOf(env), health: '/api/health', demo: 'https://apps.swiftbotlab.workers.dev/liq-guard-demo/', source: 'https://github.com/swiftbotlabs/liq-guard' });
     if (!url.pathname.startsWith('/api/')) return err('not_found', 'not found', 404);
     try {
       if (url.pathname === '/api/health') return json({ ok: true, mode: modeOf(env) });
